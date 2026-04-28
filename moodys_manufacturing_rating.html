@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credit Scorecard — Global Manufacturing Companies · LMG</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  :root { --navy:#1B2A4A; --slate:#6B7A90; --border:#E1E5EB; --bg:#FAFBFC; --card:#FFF; --green:#3D7A5F; --blue:#5A7D9A; --amber:#C4873B; --red:#A94442; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Inter',-apple-system,sans-serif; background:var(--bg); color:#1A202C; line-height:1.5; font-size:14px; }
+  .w { max-width:920px; margin:0 auto; padding:1.5rem; }
+
+  .hbar { background:var(--navy); padding:1rem 1.6rem; border-radius:3px; display:flex; align-items:center; justify-content:space-between; margin-bottom:1.4rem; }
+  .hbar .t { color:#FFF; font-size:1.05rem; font-weight:600; }
+  .hbar .s { color:#8BA3C7; font-size:.74rem; margin-top:2px; }
+  .hbar .tag { background:rgba(255,255,255,.12); color:#8BA3C7; padding:.2rem .6rem; border-radius:2px; font-size:.65rem; font-weight:500; letter-spacing:.04em; text-transform:uppercase; }
+
+  .ir { display:flex; gap:.75rem; align-items:center; margin-bottom:1.3rem; }
+  .ir label { font-weight:600; font-size:.82rem; white-space:nowrap; color:var(--navy); }
+  .ir input { flex:1; padding:.45rem .7rem; border:1px solid var(--border); border-radius:3px; font-size:.88rem; font-family:inherit; }
+  .ir input:focus { outline:none; border-color:var(--navy); box-shadow:0 0 0 2px rgba(27,42,74,.1); }
+
+  .acc { margin-bottom:.6rem; border:1px solid var(--border); border-radius:3px; background:var(--card); }
+  .acc-h { display:flex; align-items:center; justify-content:space-between; padding:.6rem .9rem; cursor:pointer; user-select:none; }
+  .acc-h:hover { background:#F8F9FA; }
+  .acc-h h3 { font-size:.85rem; font-weight:600; color:var(--navy); }
+  .acc-h .ch { transition:transform .2s; font-size:.7rem; color:var(--slate); }
+  .acc.open .ch { transform:rotate(180deg); }
+  .acc-b { display:none; padding:.6rem .9rem .9rem; border-top:1px solid var(--border); }
+  .acc.open .acc-b { display:block; }
+
+  .fg { margin-bottom:.6rem; }
+  .fg label { display:block; font-weight:600; font-size:.78rem; margin-bottom:.2rem; color:var(--navy); }
+  .fg .h { font-size:.7rem; color:var(--slate); margin-bottom:.25rem; }
+  .fg input[type=number], .fg select { width:100%; padding:.4rem .6rem; border:1px solid var(--border); border-radius:3px; font-size:.85rem; font-family:inherit; background:#FFF; }
+  .fg input:focus, .fg select:focus { outline:none; border-color:var(--navy); box-shadow:0 0 0 2px rgba(27,42,74,.1); }
+  .fr { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; }
+  .qn { background:#F4F6F8; padding:.4rem .7rem; font-size:.74rem; color:#4A5568; border-radius:2px; margin-top:.25rem; line-height:1.5; }
+
+  .btn { display:block; width:100%; padding:.65rem; background:var(--navy); color:#FFF; border:none; border-radius:3px; font-size:.88rem; font-weight:600; font-family:inherit; cursor:pointer; margin:1.3rem 0; transition:background .15s; }
+  .btn:hover { background:#243558; }
+
+  #results { display:none; }
+  .sl { font-size:.68rem; font-weight:600; color:var(--slate); text-transform:uppercase; letter-spacing:.06em; margin:1.2rem 0 .4rem; padding-bottom:.25rem; border-bottom:2px solid var(--navy); display:inline-block; }
+
+  .rd { display:flex; align-items:center; gap:1.1rem; padding:1rem 1.3rem; background:#FFF; border:1px solid var(--border); border-left:4px solid var(--navy); border-radius:2px; margin-bottom:1rem; }
+  .rd .rv { font-size:2rem; font-weight:700; color:var(--navy); line-height:1; }
+  .rd .rm { font-size:.76rem; color:var(--slate); line-height:1.5; }
+  .rd .rm strong { color:var(--navy); }
+  .gp { display:inline-block; padding:.18rem .55rem; border-radius:2px; font-weight:600; font-size:.7rem; }
+  .gp.ig { background:#E8F5E9; color:#2E7D32; }
+  .gp.sg { background:#FFEBEE; color:#C62828; }
+
+  .dt { width:100%; border-collapse:collapse; font-size:.8rem; margin:.6rem 0; }
+  .dt th { background:var(--navy); color:#FFF; padding:.45rem .55rem; text-align:left; font-weight:600; font-size:.74rem; }
+  .dt td { padding:.4rem .55rem; border-bottom:1px solid var(--border); }
+  .dt tr:hover td { background:#F8F9FA; }
+  .cb { display:inline-block; padding:.12rem .4rem; border-radius:2px; color:#FFF; font-weight:600; font-size:.72rem; }
+
+  .bc { margin:.6rem 0; }
+  .br { display:flex; align-items:center; margin-bottom:.35rem; }
+  .bl { width:170px; font-size:.74rem; font-weight:500; text-align:right; padding-right:.65rem; flex-shrink:0; color:var(--navy); }
+  .bt { flex:1; height:22px; background:#F0F2F5; border-radius:2px; overflow:hidden; }
+  .bf { height:100%; border-radius:2px; transition:width .5s; display:flex; align-items:center; justify-content:flex-end; padding-right:5px; }
+  .bf span { font-size:.68rem; font-weight:600; color:#FFF; }
+
+  .disc { text-align:left; padding:1rem 0; color:#8BA3C7; font-size:.65rem; border-top:1px solid var(--border); margin-top:1.5rem; line-height:1.6; }
+  @media(max-width:640px) { .fr{grid-template-columns:1fr} .bl{width:120px} }
+  @media print { .btn,.ch{display:none} .acc-b{display:block!important} #results{display:block!important} }
+</style>
+</head>
+<body>
+<div class="w">
+  <div class="hbar">
+    <div><div class="t">Credit Scorecard — Global Manufacturing Companies</div><div class="s">Direction des Investissements · La Mutuelle Generale</div></div>
+    <div class="tag">Methodologie Juin 2017</div>
+  </div>
+
+  <div class="ir"><label>Emetteur</label><input type="text" id="issuer" placeholder="Ex : Schneider Electric SE, Siemens AG, Legrand SA"></div>
+
+  <div class="acc open" id="a1"><div class="acc-h" onclick="tog('a1')"><h3>Factor 1 — Business Profile (20%)</h3><span class="ch">&#9660;</span></div><div class="acc-b"><div class="fg"><label>Categorie Business Profile</label><p class="h">Volatilite attendue, position concurrentielle, diversification, concentration operationnelle.</p><select id="business_profile" onchange="ud('business_profile','bd')"><option value="Aaa">Aaa</option><option value="Aa">Aa</option><option value="A">A</option><option value="Baa" selected>Baa</option><option value="Ba">Ba</option><option value="B">B</option><option value="Caa">Caa</option><option value="Ca">Ca</option></select><div class="qn" id="bd"></div></div></div></div>
+
+  <div class="acc open" id="a2"><div class="acc-h" onclick="tog('a2')"><h3>Factor 2 — Scale (20%)</h3><span class="ch">&#9660;</span></div><div class="acc-b"><div class="fg"><label>Revenue (USD Milliards)</label><p class="h">CA annuel en milliards USD, dernier exercice ou LTM.</p><input type="number" id="revenue" value="5" min="0" max="500" step="0.5"></div></div></div>
+
+  <div class="acc open" id="a3"><div class="acc-h" onclick="tog('a3')"><h3>Factor 3 — Profitability (10%)</h3><span class="ch">&#9660;</span></div><div class="acc-b"><div class="fg"><label>Marge EBITA (%)</label><p class="h">EBITA ajuste / CA. Hors charges non recurrentes, D&A incluse.</p><input type="number" id="ebita_margin" value="12" min="-50" max="100" step="0.5"></div></div></div>
+
+  <div class="acc open" id="a4"><div class="acc-h" onclick="tog('a4')"><h3>Factor 4 — Leverage & Coverage (40%)</h3><span class="ch">&#9660;</span></div><div class="acc-b"><div class="fr"><div class="fg"><label>EBITA / Charges d'interets (x)</label><input type="number" id="ebita_interest" value="6" min="0" max="100" step="0.5"></div><div class="fg"><label>Debt / EBITDA (x)</label><input type="number" id="debt_ebitda" value="2.5" min="0" max="30" step="0.25"></div></div><div class="fr"><div class="fg"><label>RCF / Net Debt (%)</label><p class="h">Retained Cash Flow / Dette nette.</p><input type="number" id="rcf_net_debt" value="30" min="-100" max="200" step="1"></div><div class="fg"><label>FCF / Debt (%)</label><p class="h">Free Cash Flow / Dette brute.</p><input type="number" id="fcf_debt" value="8" min="-50" max="100" step="0.5"></div></div></div></div>
+
+  <div class="acc open" id="a5"><div class="acc-h" onclick="tog('a5')"><h3>Factor 5 — Financial Policy (10%)</h3><span class="ch">&#9660;</span></div><div class="acc-b"><div class="fg"><label>Categorie Financial Policy</label><p class="h">Tolerance risque financier, historique M&A, distributions, engagement credit.</p><select id="financial_policy" onchange="ud('financial_policy','fd')"><option value="Aaa">Aaa</option><option value="Aa">Aa</option><option value="A">A</option><option value="Baa" selected>Baa</option><option value="Ba">Ba</option><option value="B">B</option><option value="Caa">Caa</option><option value="Ca">Ca</option></select><div class="qn" id="fd"></div></div></div></div>
+
+  <button class="btn" onclick="calc()">Calculer le rating indicatif</button>
+
+  <div id="results">
+    <div class="sl">Resultat</div>
+    <div class="rd"><div class="rv" id="rc"></div><div class="rm"><strong id="ri"></strong><br>Score composite : <span id="rs"></span><br><span id="rig"></span></div></div>
+    <div class="sl">Detail par sub-factor</div>
+    <table class="dt"><thead><tr><th>Groupe</th><th>Sub-Factor</th><th>Valeur</th><th>Categorie</th><th>Score</th><th>Poids</th><th>Pondere</th></tr></thead><tbody id="tb"></tbody></table>
+    <div class="sl">Contribution au score composite</div>
+    <div class="bc" id="bars"></div>
+    <div class="disc">Cet outil fournit un rating indicatif base sur la grille methodologique publiee. Il ne constitue pas une opinion de credit officielle. Les ratings integrent des facteurs qualitatifs et forward-looking non captures par cette grille. Reference : "Global Manufacturing Companies", Moody's Investors Service, Juin 2017.</div>
+  </div>
+</div>
+
+<script>
+const S={Aaa:1,Aa:3,A:6,Baa:9,Ba:12,B:15,Caa:18,Ca:20},RM=[["Aaa",0,1.5],["Aa1",1.5,2.5],["Aa2",2.5,3.5],["Aa3",3.5,4.5],["A1",4.5,5.5],["A2",5.5,6.5],["A3",6.5,7.5],["Baa1",7.5,8.5],["Baa2",8.5,9.5],["Baa3",9.5,10.5],["Ba1",10.5,11.5],["Ba2",11.5,12.5],["Ba3",12.5,13.5],["B1",13.5,14.5],["B2",14.5,15.5],["B3",15.5,16.5],["Caa1",16.5,17.5],["Caa2",17.5,18.5],["Caa3",18.5,19.5],["Ca",19.5,21]];
+const CC={Aaa:"#3D7A5F",Aa:"#3D7A5F",A:"#3D7A5F",Baa:"#5A7D9A",Ba:"#C4873B",B:"#A94442",Caa:"#A94442",Ca:"#A94442"};
+const IG=new Set(["Aaa","Aa1","Aa2","Aa3","A1","A2","A3","Baa1","Baa2","Baa3"]);
+const SF=[{id:"business_profile",n:"Business Profile",g:"Business Profile",w:.2,t:"q"},{id:"revenue",n:"Revenue (USD Mds)",g:"Scale",w:.2,t:"v",th:[["Aaa",40,null],["Aa",20,40],["A",10,20],["Baa",5,10],["Ba",1.5,5],["B",.25,1.5],["Caa",.1,.25],["Ca",null,.1]]},{id:"ebita_margin",n:"Marge EBITA (%)",g:"Profitability",w:.1,t:"v",th:[["Aaa",25,null],["Aa",20,25],["A",15,20],["Baa",10,15],["Ba",5,10],["B",2.5,5],["Caa",0,2.5],["Ca",null,0]]},{id:"ebita_interest",n:"EBITA / Interets (x)",g:"Leverage & Coverage",w:.1,t:"v",th:[["Aaa",15,null],["Aa",12,15],["A",8,12],["Baa",5,8],["Ba",2.5,5],["B",1,2.5],["Caa",.5,1],["Ca",null,.5]]},{id:"debt_ebitda",n:"Debt / EBITDA (x)",g:"Leverage & Coverage",w:.1,t:"v",th:[["Aaa",null,.5],["Aa",.5,1],["A",1,1.75],["Baa",1.75,3.25],["Ba",3.25,4.75],["B",4.75,6.25],["Caa",6.25,7.75],["Ca",7.75,null]]},{id:"rcf_net_debt",n:"RCF / Net Debt (%)",g:"Leverage & Coverage",w:.1,t:"v",th:[["Aaa",60,null],["Aa",45,60],["A",35,45],["Baa",25,35],["Ba",15,25],["B",7.5,15],["Caa",0,7.5],["Ca",null,0]]},{id:"fcf_debt",n:"FCF / Debt (%)",g:"Leverage & Coverage",w:.1,t:"v",th:[["Aaa",25,null],["Aa",20,25],["A",15,20],["Baa",10,15],["Ba",5,10],["B",0,5],["Caa",-5,0],["Ca",null,-5]]},{id:"financial_policy",n:"Financial Policy",g:"Financial Policy",w:.1,t:"q"}];
+const BD={Aaa:"Volatilite quasi inexistante. Position dominante, avantages de couts et techno ancres, couverture mondiale.",Aa:"Tres faible volatilite. Leader profondement ancre, defendable par couts et techno.",A:"Faible volatilite. Position forte, avantages concurrentiels demontres, diversification solide.",Baa:"Volatilite moderee. Position solide sur marches cles. Integration verticale ou pass-through. Bonne diversification.",Ba:"Produits largement indifferencies, marche concurrentiel. Tempere par position etablie.",B:"Produits indifferencies, concurrence intense, clients price-sensitive. Resultats tres volatils.",Caa:"Volatilite extreme. Presence modeste, peu d'avantages, couts eleves. 1-2 sites.",Ca:"Cash flows tres volatils, mono-produit, position insignifiante, site unique non competitif."};
+const FD={Aaa:"Politiques extremement conservatrices. Metriques tres stables. Engagement long terme tres solide.",Aa:"Politiques tres stables et conservatrices. Risque d'evenement minimal.",A:"Politiques previsibles preservant les creanciers. Risque d'evenement modeste et temporaire.",Baa:"Equilibre creanciers/actionnaires. Risque de migration via acquisitions ou distributions.",Ba:"Tendance a favoriser les actionnaires. Risque financier superieur a la moyenne.",B:"Favorise actionnaires au detriment des creanciers. Risque financier eleve.",Caa:"Risque eleve de restructuration de dette en environnements varies.",Ca:"Risque eleve de restructuration meme en environnement economique sain."};
+
+function tog(id){document.getElementById(id).classList.toggle('open')}
+function ud(sel,div){const v=document.getElementById(sel).value,d=sel==='business_profile'?BD:FD;document.getElementById(div).innerHTML='<strong>'+v+'</strong> — '+d[v]}
+function mc(v,sf){for(const[c,lo,hi]of sf.th){if(lo===null&&hi!==null&&v<hi)return c;if(hi===null&&lo!==null&&v>=lo)return c;if(lo!==null&&hi!==null&&v>=lo&&v<hi)return c}return sf.th[sf.th.length-1][0]}
+function bc(a){for(const c of["Aaa","Aa","Baa","Ba","Caa","Ca","A","B"])if(a.startsWith(c))return c;return"Ca"}
+function s2a(s){for(const[r,lo,hi]of RM)if(s>=lo&&s<hi)return r;return"Ca"}
+
+function calc(){
+  const det=[];let comp=0;
+  for(const sf of SF){let rv,cat;if(sf.t==="q"){rv=document.getElementById(sf.id).value;cat=rv}else{rv=parseFloat(document.getElementById(sf.id).value);if(isNaN(rv)){alert('Valeur invalide : '+sf.n);return}cat=mc(rv,sf)}const sc=S[cat],w=+(sc*sf.w).toFixed(2);comp+=w;det.push({n:sf.n,g:sf.g,w:sf.w,rv,cat,sc,wd:w})}
+  comp=+comp.toFixed(2);const alpha=s2a(comp),b=bc(alpha),isIG=IG.has(alpha),iss=document.getElementById('issuer').value.trim()||"Emetteur";
+  document.getElementById('results').style.display='block';
+  document.getElementById('rc').textContent=alpha;
+  document.getElementById('ri').textContent=iss;
+  document.getElementById('rs').textContent=comp;
+  const ig=document.getElementById('rig');ig.className='gp '+(isIG?'ig':'sg');ig.textContent=isIG?'Investment Grade':'Speculative Grade';
+  const tb=document.getElementById('tb');tb.innerHTML='';
+  for(const d of det)tb.innerHTML+='<tr><td>'+d.g+'</td><td>'+d.n+'</td><td style="font-weight:600">'+d.rv+'</td><td><span class="cb" style="background:'+(CC[d.cat]||"#666")+'">'+d.cat+'</span></td><td>'+d.sc+'</td><td>'+(d.w*100).toFixed(0)+'%</td><td style="font-weight:600">'+d.wd+'</td></tr>';
+  const mx=Math.max(...det.map(d=>d.wd),1),bars=document.getElementById('bars');bars.innerHTML='';
+  for(const d of det){const p=(d.wd/(mx*1.2))*100;bars.innerHTML+='<div class="br"><div class="bl">'+d.n+'</div><div class="bt"><div class="bf" style="width:'+p+'%;background:'+(CC[d.cat]||"#666")+'"><span>'+d.wd+'</span></div></div></div>'}
+  document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'})
+}
+document.addEventListener('DOMContentLoaded',()=>{ud('business_profile','bd');ud('financial_policy','fd')});
+</script>
+</body>
+</html>

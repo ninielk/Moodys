@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "moodys-rating-tool"
+version = "1.0.0"
+description = "Outil de scoring crédit Moody's — Global Manufacturing Companies"
+authors = ["Direction des Investissements - LMG"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.11"
+streamlit = "^1.30"
+plotly = "^5.18"
+pandas = "^2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
