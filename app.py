@@ -54,7 +54,7 @@ st.markdown("""
 st.markdown("""
 <div class="hbar">
     <div><div class="t">Credit Scorecard — Global Manufacturing Companies</div>
-    <div class="s">Direction des Investissements · La Mutuelle Generale</div></div>
+    <div class="s">Direction Financière · La Mutuelle Generale</div></div>
     <div class="tag">Methodologie Juin 2017</div>
 </div>""", unsafe_allow_html=True)
 
